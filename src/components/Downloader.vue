@@ -47,7 +47,25 @@ export default {
       if (status !== "成功") {
         console.error(msg, data)
       }
-      return data
+
+      const { schema = [{
+        column: '第一列',
+        type: "String",
+        value: "item => item.name"
+      }], objects = [{ name: "测试第一列内容" }], filename = 'file.xlsx' } = data;
+      schema.forEach(item => {
+        if (item?.type) {
+          item.type = eval(item.type)
+        }
+        if (item?.value) {
+          item.value = eval(item.value)
+        }
+      });
+      return {
+        schema,
+        objects,
+        filename
+      }
     },
 
     // 初始化mdapi
