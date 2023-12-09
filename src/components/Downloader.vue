@@ -1,6 +1,6 @@
 <template>
   <div @click="download" style="height: 100%;display: flex;justify-content: center;align-items: center;">
-    {{ show_text || "下载excel文件" }}
+    {{ show_text || "下载" }}
   </div>
 </template>
 <script>
@@ -35,12 +35,12 @@ export default {
 
       if (!data?.schema) {
         data.schema = [{
-          column: '标题',
+          column: '测试标题',
           type: "String",
           value: "item => item.content"
         }]
         if (!data?.objects) {
-          data.objects = [{ content: "测试内容" }]
+          data.objects = [{ content: "测试内容xxx" }]
         }
       }
 
