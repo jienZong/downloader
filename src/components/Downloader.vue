@@ -1,6 +1,6 @@
 <template>
   <div @click="download" style="height: 100%;display: flex;justify-content: center;align-items: center;">
-    {{ show_text || "下载" }}
+    {{ show_text || "下载excel文件" }}
   </div>
 </template>
 <script>
