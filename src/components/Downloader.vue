@@ -8,7 +8,7 @@ import writeXlsxFile from 'write-excel-file'
 import zionMdapi from "zion-mdapi";
 export default {
   name: "Downloader",
-  props: ["globalData", "show_text", "task_pk", "actionflow_name", "objects", "schema", "filename", "url", "actionflow_id"],
+  props: ["globalData", "show_text", "task_pk", "actionflow_name", "task_config", "download_config", "filename", "url", "actionflow_id"],
   data() {
     return {
       mdapi: null,
@@ -27,8 +27,8 @@ export default {
         data = await this.queryDownloadTaskInfo();
       } else {
         data = {
-          objects: this.objects,
-          schema: this.schema,
+          objects: this?.download_config?.objects,
+          schema: this?.download_config?.schema,
           filename: this.filename || 'test.xlsx'
         }
       }
@@ -63,6 +63,7 @@ export default {
       const { data, msg, status } = await this.mdapi.callActionflow({
         actionflow_name: this.actionflow_name,
         payload: {
+          task_config: this.task_config,
           task_pk: this.task_pk
         }
       }).catch(e => { return { data: {}, msg: e?.message || e, status: "失败" } })

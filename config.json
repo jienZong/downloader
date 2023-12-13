@@ -22,12 +22,12 @@
           "type": "TEXT"
         },
         {
-          "fieldName": "objects",
-          "type": "ARRAY"
+          "fieldName": "task_config",
+          "type": "OBJECT"
         },
         {
-          "fieldName": "schema",
-          "type": "ARRAY"
+          "fieldName": "download_config",
+          "type": "OBJECT"
         },
         {
           "fieldName": "url",
@@ -40,5 +40,5 @@
       ]
     }
   },
-  "version": "0.0.7"
+  "version": "0.0.8"
 }
