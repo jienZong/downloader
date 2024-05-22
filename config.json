@@ -7,11 +7,11 @@
       "itemInputs": [
         {
           "fieldName": "objects",
-          "type": "ARRAY"
+          "type": "array"
         },
         {
           "fieldName": "schema",
-          "type": "ARRAY"
+          "type": "array"
         },
         {
           "fieldName": "file_name",
