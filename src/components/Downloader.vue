@@ -11,8 +11,10 @@ import zionMdapi from "zion-mdapi";
 // 定义子组件向父组件传值/事件
 const props = defineProps({
   // 导出配置
-  objects: { type: [Array, String], default: () => { return [{ content: "测试内容xxx" }] } },
-  schema: { type: [Array, String], default: () => { return [{ column: '测试标题', type: "String", value: "item => item.content" }] } },
+  writeXlsxFileConfig: {
+    type: [Object, String],
+    default: '{"objects":[{"content":"测试内容xxx"}],"schema":[{"column":"测试标题","type":"String","value":"item => item.content"}]}'
+  },
   file_name: { type: String, default: "excel.xlsx" },
   // 导出按钮配置
   style: { type: String, default: "" }, // 样式
@@ -30,7 +32,7 @@ const emit = defineEmits(['refresh']);
 //定义导出行为
 const downloadExcel = async () => {
   //1.获取导出行为配置
-  const excelData = props.actionflow_name ? await queryDownloadTaskInfo() : { schema: props.schema, objects: props.objects };
+  const excelData = props.actionflow_name ? await queryDownloadTaskInfo() : typeof props.writeXlsxFileConfig === 'string' ? JSON.parse(props.writeXlsxFileConfig) : props.writeXlsxFileConfig;
   if (typeof excelData.objects === 'string') excelData.objects = JSON.parse(excelData.objects);
   if (typeof excelData.schema === 'string') excelData.schema = JSON.parse(excelData.schema);
   excelData.schema = excelData.schema.map((res: any) => {

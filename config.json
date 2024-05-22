@@ -6,12 +6,8 @@
       "description": "导出excel自定义组件",
       "itemInputs": [
         {
-          "fieldName": "objects",
-          "type": "array"
-        },
-        {
-          "fieldName": "schema",
-          "type": "array"
+          "fieldName": "writeXlsxFileConfig",
+          "type": "TEXT"
         },
         {
           "fieldName": "file_name",
@@ -40,5 +36,5 @@
       ]
     }
   },
-  "version": "0.0.2"
+  "version": "0.0.4"
 }
