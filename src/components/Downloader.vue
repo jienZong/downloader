@@ -40,7 +40,7 @@ export default {
       const excelData = this.actionflow_name ? await this.queryDownloadTaskInfo() :
         (typeof this.writeXlsxFileConfig === 'string' && this.writeXlsxFileConfig ? JSON.parse(this.writeXlsxFileConfig) : this.writeXlsxFileConfig);
       if (typeof excelData.objects === 'string') excelData[`objects`] = JSON.parse(excelData.objects);
-      if (typeof excelData.schema === 'string' ) excelData[`schema`] = JSON.parse(excelData.schema);
+      if (typeof excelData.schema === 'string') excelData[`schema`] = JSON.parse(excelData.schema);
       excelData.schema = excelData.schema.map(res => {
         return {
           column: res.column,
@@ -58,7 +58,7 @@ export default {
     async queryDownloadTaskInfo() {
       const { data, msg, status } = await this.mdapi.callActionflow({
         actionflow_name: this.actionflow_name,
-        payload: this.actionflow_payload
+        payload: typeof excelData.actionflow_payload === 'string' ? JSON.parse(this.actionflow_payload) : this.actionflow_payload
       }).catch(e => { return { data: {}, msg: e?.message || e, status: "失败" } });
       if (status !== "成功") console.error(msg, data);
       // 返回结构 {schema:[],objects:[]}
