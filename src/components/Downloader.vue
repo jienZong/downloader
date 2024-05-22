@@ -1,95 +1,66 @@
 <template>
-  <div @click="download" style="height: 100%;display: flex;justify-content: center;align-items: center;">
+  <div @click="downloadExcel" style="height: 100%;display: flex;justify-content: center;align-items: center;"
+    :style="style">
     {{ show_text || "导出excel" }}
   </div>
 </template>
-<script>
+<script setup lang="ts" name="Downloader">
+import { ref, defineProps, onMounted } from 'vue';
 import writeXlsxFile from 'write-excel-file'
 import zionMdapi from "zion-mdapi";
-export default {
-  name: "Downloader",
-  props: ["globalData", "show_text", "task_pk", "actionflow_name", "task_config", "download_config", "filename", "url", "actionflow_id"],
-  data() {
+// 定义子组件向父组件传值/事件
+const props = defineProps({
+  // 导出配置
+  objects: { type: Array, default: () => { return [{ content: "测试内容xxx" }] } },
+  schema: { type: Array, default: () => { return [{ column: '测试标题', type: "String", value: "item => item.content" }] } },
+  file_name: { type: String, default: "excel.xlsx" },
+  // 导出按钮配置
+  style: { type: String, default: "" }, // 样式
+  show_text: { type: String, default: "导出excel" },
+  // 导出行为配置
+  callback_url: { type: String, default: "" },
+  actionflow_name: { type: String, default: "" },
+  actionflow_payload: { type: Object, default: () => { return {} } },
+});
+//定义变量
+const mdapi = ref<any>({});
+
+// 定义子组件向父组件传值/事件
+const emit = defineEmits(['refresh']);
+//定义导出行为
+const downloadExcel = async () => {
+  //1.获取导出行为配置
+  const excelData = props.actionflow_name ? await queryDownloadTaskInfo() : { schema: props.schema, objects: props.objects };
+  excelData.schema = excelData.schema.map((res: any) => {
     return {
-      mdapi: null,
+      column: res.column,
+      type: eval(res.type),
+      value: eval(res.value)
     }
-  },
-  mounted() {
-    console.log("props:", this.$props);
-    this.initMadpi();
-
-  },
-
-  methods: {
-    async download() {
-      let data;
-      if (this.actionflow_name) {
-        data = await this.queryDownloadTaskInfo();
-      } else {
-        data = {
-          objects: this?.download_config?.objects,
-          schema: this?.download_config?.schema,
-          filename: this.filename || 'test.xlsx'
-        }
-      }
-
-      if (!data?.schema) {
-        data.schema = [{
-          column: '测试标题',
-          type: "String",
-          value: "item => item.content"
-        }]
-        if (!data?.objects) {
-          data.objects = [{ content: "测试内容xxx" }]
-        }
-      }
-
-      data.schema.forEach(item => {
-        if (item?.type) {
-          item.type = eval(item.type)
-        }
-        if (item?.value) {
-          item.value = eval(item.value)
-        }
-      });
-
-      await writeXlsxFile(data?.objects, {
-        schema: data?.schema,
-        fileName: data?.filename
-      })
-    },
-    // 获取下载任务信息
-    async queryDownloadTaskInfo() {
-      const { data, msg, status } = await this.mdapi.callActionflow({
-        actionflow_name: this.actionflow_name,
-        payload: {
-          task_config: this.task_config,
-          task_pk: this.task_pk
-        }
-      }).catch(e => { return { data: {}, msg: e?.message || e, status: "失败" } })
-
-      if (status !== "成功") {
-        console.error(msg, data)
-      }
-
-      const { schema = [], objects = [], filename } = data;
-
-      return {
-        schema,
-        objects,
-        filename
-      }
-    },
-
-    // 初始化mdapi
-    initMadpi() {
-      this.mdapi = zionMdapi.init({
-        url: this.url,
-        actionflow_id: this.actionflow_id,
-        env: "H5"
-      })
-    }
-  }
+  })
+  console.log(excelData);
+  //2.导出
+  writeXlsxFile(excelData.objects, {
+    schema: excelData.schema,
+    fileName: props.file_name
+  });
 }
+const queryDownloadTaskInfo = async () => {
+  const { data, msg, status } = await mdapi.value.callActionflow({
+    actionflow_name: props.actionflow_name,
+    payload: props.actionflow_payload
+  }).catch((e: any) => { return { data: {}, msg: e?.message || e, status: "失败" } });
+  if (status !== "成功") console.error(msg, data);
+  // 返回结构 {schema:[],objects:[]}
+  return data
+}
+
+onMounted(() => {
+  //zionMdapi框架初始化
+  mdapi.value = zionMdapi.init({
+    callback_url: props.callback_url,
+    env: "H5"
+  })
+})
+
 </script>
-<style></style>
