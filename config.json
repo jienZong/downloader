@@ -7,11 +7,11 @@
       "itemInputs": [
         {
           "fieldName": "objects",
-          "type": "ARRAYS"
+          "type": "ARRAY"
         },
         {
           "fieldName": "schema",
-          "type": "ARRAYS"
+          "type": "ARRAY"
         },
         {
           "fieldName": "file_name",
@@ -35,7 +35,7 @@
         },
         {
           "fieldName": "actionflow_payload",
-          "type": "OBJECTS"
+          "type": "TEXT"
         }
       ]
     }

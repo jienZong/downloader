@@ -1,5 +1,5 @@
 <template>
-  <div @click="downloadExcel" style="height: 100%;display: flex;justify-content: center;align-items: center;"
+  <div @click="downloadExcel()" style="height: 100%;display: flex;justify-content: center;align-items: center;"
     :style="style">
     {{ show_text || "导出excel" }}
   </div>
@@ -11,8 +11,8 @@ import zionMdapi from "zion-mdapi";
 // 定义子组件向父组件传值/事件
 const props = defineProps({
   // 导出配置
-  objects: { type: Array, default: () => { return [{ content: "测试内容xxx" }] } },
-  schema: { type: Array, default: () => { return [{ column: '测试标题', type: "String", value: "item => item.content" }] } },
+  objects: { type: [Array, String], default: () => { return [{ content: "测试内容xxx" }] } },
+  schema: { type: [Array, String], default: () => { return [{ column: '测试标题', type: "String", value: "item => item.content" }] } },
   file_name: { type: String, default: "excel.xlsx" },
   // 导出按钮配置
   style: { type: String, default: "" }, // 样式
@@ -20,7 +20,7 @@ const props = defineProps({
   // 导出行为配置
   callback_url: { type: String, default: "" },
   actionflow_name: { type: String, default: "" },
-  actionflow_payload: { type: Object, default: () => { return {} } },
+  actionflow_payload: { type: [Object, String], default: () => { return {} } },
 });
 //定义变量
 const mdapi = ref<any>({});
@@ -31,6 +31,8 @@ const emit = defineEmits(['refresh']);
 const downloadExcel = async () => {
   //1.获取导出行为配置
   const excelData = props.actionflow_name ? await queryDownloadTaskInfo() : { schema: props.schema, objects: props.objects };
+  if (typeof excelData.objects === 'string') excelData.objects = JSON.parse(excelData.objects);
+  if (typeof excelData.schema === 'string') excelData.schema = JSON.parse(excelData.schema);
   excelData.schema = excelData.schema.map((res: any) => {
     return {
       column: res.column,
@@ -38,7 +40,6 @@ const downloadExcel = async () => {
       value: eval(res.value)
     }
   })
-  console.log(excelData);
   //2.导出
   writeXlsxFile(excelData.objects, {
     schema: excelData.schema,
