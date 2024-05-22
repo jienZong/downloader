@@ -39,15 +39,19 @@ export default {
       //1.获取导出行为配置
       const excelData = this.actionflow_name ? await this.queryDownloadTaskInfo() :
         (typeof this.writeXlsxFileConfig === 'string' && this.writeXlsxFileConfig ? JSON.parse(this.writeXlsxFileConfig) : this.writeXlsxFileConfig);
+
+
+      console.log(excelData);
       if (typeof excelData.objects === 'string') excelData[`objects`] = JSON.parse(excelData.objects);
       if (typeof excelData.schema === 'string') excelData[`schema`] = JSON.parse(excelData.schema);
       excelData.schema = excelData.schema.map(res => {
         return {
           column: res.column,
-          type: eval(res.type),
-          value: eval(res.value)
+          type: typeof res.type === 'string' ? eval(res.type) : res.type,
+          value: typeof res.value === 'string' ? eval(res.value) : res.value,
         }
       })
+      console.log(excelData);
       //2.导出
       const data = await writeXlsxFile(excelData.objects, {
         schema: excelData.schema,
@@ -56,13 +60,11 @@ export default {
       console.log(excelData, data);
     },
     async queryDownloadTaskInfo() {
-      const { data, msg, status } = await this.mdapi.callActionflow({
-        actionflow_name: this.actionflow_name,
-        payload: typeof excelData.actionflow_payload === 'string' ? JSON.parse(this.actionflow_payload) : this.actionflow_payload
-      }).catch(e => { return { data: {}, msg: e?.message || e, status: "失败" } });
-      if (status !== "成功") console.error(msg, data);
       // 返回结构 {schema:[],objects:[]}
-      return data
+      return await this.mdapi.callActionflow({
+        actionflow_name: this.actionflow_name,
+        payload: typeof this.actionflow_payload === 'string' ? JSON.parse(this.actionflow_payload) : this.actionflow_payload
+      })
     }
   },
   mounted() {
@@ -72,6 +74,7 @@ export default {
       callback_url: this.callback_url,
       env: "H5"
     })
+    console.log(this.mdapi);
   },
 }
 </script>
