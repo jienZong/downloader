@@ -38,9 +38,9 @@ export default {
     async downloadExcel() {
       //1.获取导出行为配置
       const excelData = this.actionflow_name ? await this.queryDownloadTaskInfo() :
-        (typeof this.writeXlsxFileConfig === 'string' ? JSON.parse(this.writeXlsxFileConfig) : this.writeXlsxFileConfig);
+        (typeof this.writeXlsxFileConfig === 'string' && this.writeXlsxFileConfig ? JSON.parse(this.writeXlsxFileConfig) : this.writeXlsxFileConfig);
       if (typeof excelData.objects === 'string') excelData[`objects`] = JSON.parse(excelData.objects);
-      if (typeof excelData.schema === 'string') excelData[`schema`] = JSON.parse(excelData.schema);
+      if (typeof excelData.schema === 'string' ) excelData[`schema`] = JSON.parse(excelData.schema);
       excelData.schema = excelData.schema.map(res => {
         return {
           column: res.column,
@@ -48,12 +48,12 @@ export default {
           value: eval(res.value)
         }
       })
-      console.log(excelData);
       //2.导出
-      writeXlsxFile(excelData.objects, {
+      const data = await writeXlsxFile(excelData.objects, {
         schema: excelData.schema,
         fileName: this.file_name
       });
+      console.log(excelData, data);
     },
     async queryDownloadTaskInfo() {
       const { data, msg, status } = await this.mdapi.callActionflow({
