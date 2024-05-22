@@ -1,6 +1,6 @@
 <template>
-  <div @click="downloadExcel()" style="height: 100%;display: flex;justify-content: center;align-items: center;"
-    :style="style">
+  <div  style="height: 100%;display: flex;justify-content: center;align-items: center;"
+    :style="style" @click="downloadExcel()">
     {{ show_text || "导出excel" }}
   </div>
 </template>
@@ -10,6 +10,11 @@ import writeXlsxFile from 'write-excel-file'
 import zionMdapi from "zion-mdapi";
 // 定义子组件向父组件传值/事件
 const props = defineProps({
+  //全局参数
+  globaldata:{
+    type: [Object, String],
+    default:""
+  },
   // 导出配置
   writeXlsxFileConfig: {
     type: [Object, String],
@@ -26,7 +31,6 @@ const props = defineProps({
 });
 //定义变量
 const mdapi = ref<any>({});
-
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 //定义导出行为
@@ -42,6 +46,7 @@ const downloadExcel = async () => {
       value: eval(res.value)
     }
   })
+  console.log(excelData);
   //2.导出
   writeXlsxFile(excelData.objects, {
     schema: excelData.schema,
