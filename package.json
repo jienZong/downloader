@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "cd node_modules/zion-mdapi && npm start",
+    "test": "cd node_modules/zion-mdapi && npm test"
   },
   "dependencies": {
     "read-excel-file": "^5.7.1",

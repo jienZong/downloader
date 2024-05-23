@@ -1,0 +1,19 @@
+{
+    "name": "猛犸社区",
+	"callback_url": "https://zion-app.functorz.com/zero/NyndxPeyPD6/callback/f1ac35c3-a4cb-4827-87f6-e02b5d9ce601",
+    "url": "https://zion-app.functorz.com/zero/NyndxPeyPD6/api/graphql-v2",
+    "headers": {
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJoYXN1cmFfY2xhaW1zIjp7IngtaGFzdXJhLXVzZXItaWQiOiIxMDA5OTk5OTk5OTk5OTk5IiwieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJhZG1pbiJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhZG1pbiJ9LCJ6ZXJvIjp7fSwicm9sZXMiOlsiYWRtaW4iXSwiWkVST19VU0VSX0lEIjoiMTAwOTk5OTk5OTk5OTk5OSIsImRlZmF1bHRSb2xlIjoiYWRtaW4ifQ.qMiN6McbTza9NNVrGjwIDauMGFHgZ-KxZbMkqT96MkU"
+    },
+    "actionflow_id": "ab1c967b-93e8-4b8e-838f-fd554eccd1c3",
+    "actionflow_version": null,
+    "client_data": {
+        "actionflow_pwd": "",
+        "token": "",
+        "is_binlog": true,
+        "is_errlog": true
+    },
+    "env": "H5",
+    "server_port": 3020,
+    "server_root": "http://localhost"
+}
